@@ -8,7 +8,7 @@ from .models import Song
 
 
 # Create your views here.
-@api_view(['GET', 'POST']) #Decorator to specify what requests can be made. 
+@api_view(['GET','POST']) #Decorator to specify what requests can be made. 
 def songs_list(request):
     if request.method == 'GET':
         songs = Song.objects.all() #Query to get all songs
@@ -20,11 +20,19 @@ def songs_list(request):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-@api_view(['GET', 'PUT','DELETE'])
+@api_view(['GET','PUT','DELETE'])
 def songs_item(request, pk): #Adding pk will allow search for an object in the db by the primary key.
     song = get_object_or_404(Song, pk=pk) #Django shortcut to quary 
     if request.method == 'GET':
         serializer = SongSerializer(song)
         return Response(serializer.data)
+    elif request.method == 'PUT':
+        serializer = SongSerializer(song, data=request.data) #Arguement the incoming request and accessing any data with that request.
+        serializer.is_valid(raise_exception=True) #Statement to make sure data to POST is valid
+        serializer.save()
+        return Response(serializer.data)
+    elif request.method == 'DELETE':
+        song.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 

@@ -18,5 +18,5 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/music/', include('songs.urls')), 
+    path('api/music/', include('songs.urls')), #Path changed to match user story. (api/music instead of api/songs)
 ]
